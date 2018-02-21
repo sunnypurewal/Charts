@@ -505,7 +505,10 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         case y
     }
     
-    private var _isDragging = false
+    open var isDecelerating: Bool {
+        return _decelerationDisplayLink != nil
+    }
+    open var isDragging = false
     private var _isScaling = false
     private var _gestureScaleAxis = GestureScaleAxis.both
     private var _closestDataSetToTouch: IChartDataSet!
@@ -679,7 +682,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             //  * If we have a drag offset - we always have something to drag
             if !self.hasNoDragOffset || !self.isFullyZoomedOut
             {
-                _isDragging = true
+                isDragging = true
                 
                 _closestDataSetToTouch = getDataSetByTouchPoint(point: recognizer.nsuiLocationOfTouch(0, inView: self))
                 
@@ -702,7 +705,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                     {
                         // We can stop dragging right now, and let the scroll view take control
                         _outerScrollView = nil
-                        _isDragging = false
+                        isDragging = false
                     }
                 }
                 else
@@ -720,12 +723,12 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             {
                 // We will only handle highlights on NSUIGestureRecognizerState.Changed
                 
-                _isDragging = false
+                isDragging = false
             }
         }
         else if recognizer.state == NSUIGestureRecognizerState.changed
         {
-            if _isDragging
+            if isDragging
             {
                 let originalTranslation = recognizer.translation(in: self)
                 var translation = CGPoint(x: originalTranslation.x - _lastPanPoint.x, y: originalTranslation.y - _lastPanPoint.y)
@@ -758,7 +761,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         }
         else if recognizer.state == NSUIGestureRecognizerState.ended || recognizer.state == NSUIGestureRecognizerState.cancelled
         {
-            if _isDragging
+            if isDragging
             {
                 if recognizer.state == NSUIGestureRecognizerState.ended && isDragDecelerationEnabled
                 {
@@ -771,7 +774,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                     _decelerationDisplayLink.add(to: RunLoop.main, forMode: RunLoopMode.commonModes)
                 }
                 
-                _isDragging = false
+                isDragging = false
             }
             
             if _outerScrollView !== nil
