@@ -509,7 +509,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         return _decelerationDisplayLink != nil
     }
     open var isDragging = false
-    open var _isScaling = false
+    open var isScaling = false
     private var _gestureScaleAxis = GestureScaleAxis.both
     private var _closestDataSetToTouch: IChartDataSet!
     private var _panGestureReachedEdge: Bool = false
@@ -585,7 +585,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             if _data !== nil &&
                 (_pinchZoomEnabled || _scaleXEnabled || _scaleYEnabled)
             {
-                _isScaling = true
+                isScaling = true
                 
                 if _pinchZoomEnabled
                 {
@@ -610,9 +610,9 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         else if recognizer.state == NSUIGestureRecognizerState.ended ||
             recognizer.state == NSUIGestureRecognizerState.cancelled
         {
-            if _isScaling
+            if isScaling
             {
-                _isScaling = false
+                isScaling = false
                 
                 // Range might have changed, which means that Y-axis labels could have changed in size, affecting Y-axis size. So we need to recalculate offsets.
                 calculateOffsets()
@@ -625,7 +625,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             var canZoomMoreX = isZoomingOut ? _viewPortHandler.canZoomOutMoreX : _viewPortHandler.canZoomInMoreX
             var canZoomMoreY = isZoomingOut ? _viewPortHandler.canZoomOutMoreY : _viewPortHandler.canZoomInMoreY
             
-            if _isScaling
+            if isScaling
             {
                 canZoomMoreX = canZoomMoreX && _scaleXEnabled && (_gestureScaleAxis == .both || _gestureScaleAxis == .x)
                 canZoomMoreY = canZoomMoreY && _scaleYEnabled && (_gestureScaleAxis == .both || _gestureScaleAxis == .y)
