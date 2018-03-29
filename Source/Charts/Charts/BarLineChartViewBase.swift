@@ -509,7 +509,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         return _decelerationDisplayLink != nil
     }
     open var isDragging = false
-    private var _isScaling = false
+    open var _isScaling = false
     private var _gestureScaleAxis = GestureScaleAxis.both
     private var _closestDataSetToTouch: IChartDataSet!
     private var _panGestureReachedEdge: Bool = false
